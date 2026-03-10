@@ -1,0 +1,47 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\begin{document}
+\begin{tikzpicture}[scale=0.85]
+
+% Terre
+\fill[blue!25] (0,0) circle (0.55);
+\draw[thick] (0,0) circle (0.55);
+\node at (0,0) {\small Terre};
+
+% Paris (nord)
+\coordinate (Paris) at (-0.38,0.38);
+\fill[red] (Paris) circle (2.5pt);
+\node[above left] at (Paris) {\scriptsize Paris};
+
+% Cayenne (sud)
+\coordinate (Cayenne) at (-0.38,-0.38);
+\fill[red] (Cayenne) circle (2.5pt);
+\node[below left] at (Cayenne) {\scriptsize Cayenne};
+
+% Mars
+\coordinate (Mars) at (5.5,0);
+\fill[red!60] (Mars) circle (0.4);
+\draw[thick] (Mars) circle (0.4);
+\node[above] at (5.5,0.45) {\small Mars};
+
+% Lignes de visée
+\draw[dashed, red!80] (Paris)  -- (Mars);
+\draw[dashed, red!80] (Cayenne) -- (Mars);
+
+% Étoiles de fond
+\foreach \y in {1.5, 0.5, -0.5, -1.5} {
+  \node[gray] at (7.8,\y) {$\star$};
+}
+\draw[dashed,gray!50] (Paris)   -- (7.5, 0.55);
+\draw[dashed,gray!50] (Cayenne) -- (7.5,-0.55);
+
+% Angle parallaxe
+\draw[blue, thick] (Mars)++(150:0.65) arc[start angle=150,end angle=210,radius=0.65];
+\node[blue,left] at (4.75,0) {\small $p$};
+
+% Base de mesure
+\draw[<->] (-0.9,0.38) -- (-0.9,-0.38) node[midway,left]{\scriptsize base};
+
+\end{tikzpicture}
+\end{document}

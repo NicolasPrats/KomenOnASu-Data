@@ -1,0 +1,11 @@
+forme:
+  label: "Forme de la Terre"
+  domains: [astronomie, geodesie]
+
+taille:
+  label: "Taille de la Terre"
+  domains: [astronomie, geodesie]
+
+distance:
+  label: "Distance Terre–Soleil"
+  domains: [astronomie]

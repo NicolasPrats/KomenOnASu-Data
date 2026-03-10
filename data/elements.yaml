@@ -1,0 +1,34 @@
+hypothesis:
+  label: "Hypothèse"
+  color: "#9b6fd4"
+  humanReviewed: false
+
+observation:
+  label: "Observation"
+  color: "#009e73"
+  humanReviewed: false
+
+obs_failed:
+  label: "Obs. ambiguë"
+  color: "#cc79a7"
+  humanReviewed: false
+
+deduction:
+  label: "Déduction"
+  color: "#e69f00"
+  humanReviewed: false
+
+experiment:
+  label: "Expérience"
+  color: "#0072b2"
+  humanReviewed: false
+
+measure:
+  label: "Mesure"
+  color: "#f0e442"
+  humanReviewed: false
+
+instrument:
+  label: "Instrument"
+  color: "#d55e00"
+  humanReviewed: false

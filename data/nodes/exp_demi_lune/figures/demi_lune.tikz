@@ -1,0 +1,40 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, angles, quotes}
+\begin{document}
+\begin{tikzpicture}[scale=1.1]
+
+% Terre
+\coordinate (T) at (0,0);
+\fill[blue!25] (T) circle (0.3);
+\draw[thick] (T) circle (0.3);
+\node[below left] at (T) {\small T};
+
+% Lune au quartier (angle droit en L)
+\coordinate (L) at (3,0);
+\fill[yellow!50] (L) circle (0.25);
+\draw[thick] (L) circle (0.25);
+\node[below] at (L) {\small L};
+
+% Soleil (loin à droite en haut)
+\coordinate (S) at (3,4);
+\fill[orange!70] (S) circle (0.35);
+\draw[thick] (S) circle (0.35);
+\node[right] at (S) {\small Soleil};
+
+% Angle droit en L
+\draw[thick] (T) -- (L) -- (S);
+\draw[red, thick] (L) ++(180:0.3) -- ++(0,0.3) -- ++(0:0.3);
+\node[red, left] at (2.7,0.3) {\scriptsize 90°};
+
+% Angle alpha en T
+\draw[thick, dashed] (T) -- (S);
+\draw[blue, thick] (T)++(0:0.6) arc[start angle=0, end angle=53, radius=0.6];
+\node[blue, right] at (0.65,0.3) {\small $\alpha \approx 87°$};
+
+% Distances
+\draw[<->, gray] (0,-0.6) -- (3,-0.6) node[midway,below]{\small $d_{TL}$};
+\draw[<->, gray, dashed] (0.15,0.15) -- (2.85,3.85) node[midway,right]{\small $d_{TS}$};
+
+\end{tikzpicture}
+\end{document}
