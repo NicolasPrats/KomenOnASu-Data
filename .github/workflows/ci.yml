@@ -27,7 +27,12 @@ jobs:
             https://drop.tectonic.typesetting.com/install.sh | sh
 
       - name: Add tectonic to PATH
-        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+        run: |
+          echo "=== Searching for tectonic ==="
+          find $HOME -name "tectonic" 2>/dev/null || true
+          find /usr -name "tectonic" 2>/dev/null || true
+          which tectonic 2>/dev/null || echo "not in PATH yet"
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Install dvisvgm & svgo
         run: |
