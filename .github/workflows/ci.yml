@@ -23,16 +23,19 @@ jobs:
 
       - name: Install tectonic
         run: |
-          curl --proto '=https' --tlsv1.2 -fsSL \
-            https://drop.tectonic.typesetting.com/install.sh | sh
+          # Version pinned intentionally for CI stability.
+          # To upgrade: check https://github.com/tectonic-typesetting/tectonic/releases
+          # and update the version number in both ci.yml and release.yml
+          TECTONIC_VERSION="0.15.0"
+          wget -qO tectonic.tar.gz \
+            "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%40${TECTONIC_VERSION}/tectonic-${TECTONIC_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+          tar -xzf tectonic.tar.gz
+          mkdir -p $HOME/.local/bin
+          mv tectonic $HOME/.local/bin/tectonic
+          chmod +x $HOME/.local/bin/tectonic
 
       - name: Add tectonic to PATH
-        run: |
-          echo "=== Searching for tectonic ==="
-          find $HOME -name "tectonic" 2>/dev/null || true
-          find /usr -name "tectonic" 2>/dev/null || true
-          which tectonic 2>/dev/null || echo "not in PATH yet"
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Install dvisvgm & svgo
         run: |
