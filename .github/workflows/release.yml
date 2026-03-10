@@ -1,0 +1,83 @@
+name: Release
+
+on:
+  pull_request:
+    branches: [main]
+    types: [closed]
+
+jobs:
+  release:
+    name: Build & publish release
+    runs-on: ubuntu-latest
+    # Only run when the PR was actually merged (not just closed)
+    if: github.event.pull_request.merged == true
+
+    permissions:
+      contents: write  # needed to create GitHub releases
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: pip install pyyaml
+
+      - name: Install tectonic
+        run: |
+          curl --proto '=https' --tlsv1.2 -fsSL \
+            https://drop.tectonic.typesetting.com/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dvisvgm & svgo
+        run: |
+          sudo apt-get install -y dvisvgm
+          sudo npm install -g svgo
+
+      - name: Build (strict)
+        run: python build.py --strict --data data --dist dist
+
+      - name: Compute version tag
+        id: version
+        run: |
+          BASE=$(date -u +%Y-%m-%d)
+          # List existing tags for today and find the highest increment
+          git fetch --tags
+          EXISTING=$(git tag -l "${BASE}*" | sort -V | tail -1)
+          if [ -z "$EXISTING" ]; then
+            TAG="${BASE}"
+          else
+            # Extract suffix: YYYY-MM-DD -> "", YYYY-MM-DD-2 -> "2"
+            SUFFIX="${EXISTING#${BASE}}"
+            if [ -z "$SUFFIX" ]; then
+              TAG="${BASE}-2"
+            else
+              N="${SUFFIX#-}"
+              TAG="${BASE}-$((N + 1))"
+            fi
+          fi
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "Version: ${TAG}"
+
+      - name: Package dist as zip
+        run: |
+          cd dist
+          zip -r ../komenonasu-data-${{ steps.version.outputs.tag }}.zip .
+          cd ..
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: "Data ${{ steps.version.outputs.tag }}"
+          body: |
+            Automated release from PR #${{ github.event.pull_request.number }}
+            **${{ github.event.pull_request.title }}**
+
+            ${{ github.event.pull_request.body }}
+          files: komenonasu-data-${{ steps.version.outputs.tag }}.zip
+          make_latest: true
