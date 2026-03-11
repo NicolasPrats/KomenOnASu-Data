@@ -1,0 +1,41 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, angles, quotes}
+\begin{document}
+\begin{tikzpicture}[scale=0.9]
+
+% Terre
+\fill[blue!25] (0,0) circle (0.9);
+\draw[thick] (0,0) circle (0.9);
+\node at (0,0) {\small Terre};
+
+% Deux points d'observation
+\coordinate (A) at (-0.64, 0.64);  % point A (nord)
+\coordinate (B) at (-0.64,-0.64);  % point B (sud)
+\fill[red] (A) circle (2pt) node[left]{\small A};
+\fill[red] (B) circle (2pt) node[left]{\small B};
+
+% Lune
+\coordinate (Moon) at (5,0);
+\fill[yellow!50] (Moon) circle (0.5);
+\draw[thick] (Moon) circle (0.5);
+\node[above] at (5,0.55) {\small Lune};
+
+% Lignes de visée
+\draw[dashed, red] (A) -- (Moon);
+\draw[dashed, red] (B) -- (Moon);
+
+% Étoiles lointaines (ligne de référence)
+\draw[->, gray!70, thick] (5.5,-1.5) -- (7.5,-1.5) node[right]{\small étoiles fixes};
+\draw[dashed, gray!50] (A) -- (7,-0.2);
+\draw[dashed, gray!50] (B) -- (7,-1.1);
+
+% Angle de parallaxe
+\draw[blue, thick] (Moon) ++(160:0.7) arc[start angle=160, end angle=200, radius=0.7];
+\node[blue, left] at (4.2,0) {\small $\pi$};
+
+% Distance
+\draw[<->, thick] (0,-1.5) -- (4.5,-1.5) node[midway, below]{\small $d$ = 60 $R_\oplus$};
+
+\end{tikzpicture}
+\end{document}

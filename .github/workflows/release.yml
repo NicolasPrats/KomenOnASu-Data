@@ -1,0 +1,93 @@
+name: Release
+
+on:
+  pull_request:
+    branches: [main]
+    types: [closed]
+
+jobs:
+  release:
+    name: Build & publish release
+    runs-on: ubuntu-latest
+    # Only run when the PR was actually merged (not just closed)
+    if: github.event.pull_request.merged == true
+
+    permissions:
+      contents: write  # needed to create GitHub releases
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: pip install pyyaml
+
+      - name: Install tectonic
+        run: |
+          # Version pinned intentionally for CI stability.
+          # To upgrade: check https://github.com/tectonic-typesetting/tectonic/releases
+          # and update the version number in both ci.yml and release.yml
+          TECTONIC_VERSION="0.15.0"
+          wget -qO tectonic.tar.gz \
+            "https://github.com/tectonic-typesetting/tectonic/releases/download/tectonic%40${TECTONIC_VERSION}/tectonic-${TECTONIC_VERSION}-x86_64-unknown-linux-musl.tar.gz"
+          tar -xzf tectonic.tar.gz
+          mkdir -p $HOME/.local/bin
+          mv tectonic $HOME/.local/bin/tectonic
+          chmod +x $HOME/.local/bin/tectonic
+
+      - name: Add tectonic to PATH
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dvisvgm & svgo
+        run: |
+          sudo apt-get install -y dvisvgm
+          sudo npm install -g svgo
+
+      - name: Build (strict)
+        run: python build.py --strict --data data --dist dist
+
+      - name: Compute version tag
+        id: version
+        run: |
+          BASE=$(date -u +%Y-%m-%d)
+          # List existing tags for today and find the highest increment
+          git fetch --tags
+          EXISTING=$(git tag -l "${BASE}*" | sort -V | tail -1)
+          if [ -z "$EXISTING" ]; then
+            TAG="${BASE}"
+          else
+            # Extract suffix: YYYY-MM-DD -> "", YYYY-MM-DD-2 -> "2"
+            SUFFIX="${EXISTING#${BASE}}"
+            if [ -z "$SUFFIX" ]; then
+              TAG="${BASE}-2"
+            else
+              N="${SUFFIX#-}"
+              TAG="${BASE}-$((N + 1))"
+            fi
+          fi
+          echo "tag=${TAG}" >> $GITHUB_OUTPUT
+          echo "Version: ${TAG}"
+
+      - name: Package dist as zip
+        run: |
+          cd dist
+          zip -r ../KomenOnASu-data-${{ steps.version.outputs.tag }}.zip .
+          cd ..
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: "Data ${{ steps.version.outputs.tag }}"
+          body: |
+            Automated release from PR #${{ github.event.pull_request.number }}
+            **${{ github.event.pull_request.title }}**
+
+            ${{ github.event.pull_request.body }}
+          files: KomenOnASu-data-${{ steps.version.outputs.tag }}.zip
+          make_latest: true

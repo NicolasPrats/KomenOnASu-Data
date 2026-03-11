@@ -1,0 +1,42 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta}
+\begin{document}
+\begin{tikzpicture}[scale=0.8]
+
+% Soleil (centre gauche)
+\fill[orange!70] (-5,0) circle (1.2);
+\draw[thick] (-5,0) circle (1.2);
+\node at (-5,0) {\small Soleil};
+
+% Vénus
+\fill[orange!30] (0,0) circle (0.35);
+\draw[thick] (0,0) circle (0.35);
+\node[above] at (0,0.4) {\small Vénus};
+
+% Terre
+\fill[blue!25] (4.5,0) circle (0.45);
+\draw[thick] (4.5,0) circle (0.45);
+\node[below] at (4.5,-0.5) {\small Terre};
+
+% Observateur A (nord)
+\coordinate (A) at (4.15,0.32);
+\fill[red] (A) circle (2pt) node[right]{\scriptsize A};
+
+% Observateur B (sud)  
+\coordinate (B) at (4.15,-0.32);
+\fill[red] (B) circle (2pt) node[right]{\scriptsize B};
+
+% Trajectoires de transit vues depuis A et B
+\draw[red, thick, ->] (-3.9,0.22) -- (-1.8,0.22) node[above]{\scriptsize trajet A};
+\draw[blue!70, thick, ->] (-3.9,-0.18) -- (-1.8,-0.18) node[below]{\scriptsize trajet B};
+
+% Lignes de visée
+\draw[dashed, red!60]   (A) -- (-3.9,0.22);
+\draw[dashed, blue!50]  (B) -- (-3.9,-0.18);
+
+% Angle parallaxe solaire
+\draw[<->, thick, purple] (-3.85,0.24) -- (-3.85,-0.2) node[midway,right]{\scriptsize $\Delta$};
+
+\end{tikzpicture}
+\end{document}

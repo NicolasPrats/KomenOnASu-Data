@@ -1,0 +1,39 @@
+\documentclass[tikz,border=8pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{angles, quotes, arrows.meta}
+\begin{document}
+\begin{tikzpicture}[scale=1.1]
+
+% Arc de Terre
+\draw[thick, blue!40] (-2.5,-3.5) arc[start angle=220, end angle=320, radius=4];
+\node[blue!60] at (0,-3.8) {\small surface terrestre};
+
+% Centre de la Terre
+\coordinate (O) at (0,-4);
+
+% Syène — rayon solaire vertical (soleil au zénith)
+\coordinate (Syene) at (-1.15,-0.28);
+\draw[thick] (Syene) -- ++(0,-0.7) node[below left]{\small Syène};
+\draw[->, orange, very thick] (-1.15,1.2) -- (-1.15,0.1) node[midway, right]{\small rayon solaire};
+\draw[dashed, gray] (O) -- (-1.15,1.0);
+
+% Alexandrie — gnomon avec ombre
+\coordinate (Alex) at (1.15,-0.28);
+\draw[thick] (Alex) -- ++(0,-0.7) node[below right]{\small Alexandrie};
+\draw[thick, brown] (Alex) -- ++(0, 0.7) node[above]{\tiny gnomon};
+\draw[->, orange, very thick] (0.55,1.2) -- (0.95,0.1);
+\draw[dashed, gray] (O) -- (1.15,1.0);
+
+% Angle 7.2° au centre
+\draw[dashed] (O) -- (-1.15,0);
+\draw[dashed] (O) -- ( 1.15,0);
+\draw[red, thick] (0,-3.2) arc[start angle=90, end angle=107, radius=0.8];
+\node[red] at (-0.35,-2.95) {\small $7.2°$};
+\node[red] at (-0.35,-2.65) {\small $= \frac{1}{50}$};
+
+% Angle au gnomon
+\draw[red, thick] (1.15,-0.28) ++(90:0.35) arc[start angle=90, end angle=117, radius=0.35];
+\node[red, right] at (1.52,0.1) {\small $7.2°$};
+
+\end{tikzpicture}
+\end{document}
