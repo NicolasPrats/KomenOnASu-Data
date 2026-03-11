@@ -48,9 +48,6 @@ jobs:
           sudo apt-get install -y dvisvgm
           sudo npm install -g svgo
 
-      - name: Build (strict)
-        run: python build.py --strict --data data --dist dist
-
       - name: Compute version tag
         id: version
         run: |
@@ -70,6 +67,9 @@ jobs:
           fi
           echo "tag=${TAG}" >> $GITHUB_OUTPUT
           echo "Version: ${TAG}"
+
+      - name: Build (strict)
+        run: python build.py --strict --data data --dist dist --version ${{ steps.version.outputs.tag }}
 
       - name: Package dist as zip
         run: |
@@ -100,22 +100,33 @@ jobs:
           VERSION=${{ steps.version.outputs.tag }}
           mkdir -p gh-pages/${VERSION}
           cp -r dist/. gh-pages/${VERSION}/
-          echo "{\"version\": \"${VERSION}\"}" > gh-pages/latest.json
 
-      - name: Prune old versions (keep 5 most recent)
+      - name: Update versions.json (keep 5 most recent)
         run: |
           cd gh-pages
-          # List version folders (YYYY-MM-DD or YYYY-MM-DD-N), sorted oldest first
-          VERSIONS=$(ls -d [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]* 2>/dev/null | sort -V)
-          COUNT=$(echo "$VERSIONS" | grep -c . || true)
+          VERSION=${{ steps.version.outputs.tag }}
+
+          # List all version folders sorted newest-first
+          ALL=$(ls -d [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]* 2>/dev/null | sort -Vr)
+
+          # Keep only 5, delete the rest
           KEEP=5
-          if [ "$COUNT" -gt "$KEEP" ]; then
-            TO_DELETE=$(echo "$VERSIONS" | head -n $(( COUNT - KEEP )))
-            echo "Deleting old versions: $TO_DELETE"
-            echo "$TO_DELETE" | xargs rm -rf
-          else
-            echo "Only $COUNT version(s) present, nothing to prune."
-          fi
+          COUNT=0
+          VERSIONS_TO_KEEP=()
+          for V in $ALL; do
+            COUNT=$((COUNT + 1))
+            if [ $COUNT -le $KEEP ]; then
+              VERSIONS_TO_KEEP+=("\"$V\"")
+            else
+              echo "Pruning old version: $V"
+              rm -rf "$V"
+            fi
+          done
+
+          # Write versions.json — newest first
+          VERSIONS_JSON=$(IFS=,; echo "${VERSIONS_TO_KEEP[*]}")
+          echo "{\"versions\": [${VERSIONS_JSON}]}" > versions.json
+          echo "versions.json: [${VERSIONS_JSON}]"
 
       - name: Commit & push to gh-pages
         run: |
