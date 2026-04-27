@@ -2,8 +2,10 @@
 name: "Aristote"
 born: -384
 died: -322
-tagline: "Encyclopédiste antique : premier à démontrer par l'observation la sphéricité de la Terre."
-humanReviewed: false
+tagline: "Philosophe grec ayant abordé presque tous les domaines de connaissance de son époque."
+humanReviewed: true
 ---
 
-Aristote (~384–322 av. J.-C.) est l'un des penseurs les plus influents de l'Antiquité. Dans *Du Ciel* (Περὶ οὐρανοῦ), il rassemble plusieurs arguments empiriques pour conclure à la sphéricité de la Terre : l'ombre circulaire lors des éclipses de Lune, la variation des constellations selon la latitude, et l'argument gravitationnel. C'est la première démonstration multi-preuves convergentes d'un fait cosmologique.
+Aristote (384–322 av. J.-C.) est un philosophe grec, dont les travaux ont profondément influencé la logique, la biologie et la physique, ainsi que la vision du monde antique et médiéval.
+
+Dans son traité du ciel, il défend un modèle géocentrique, plaçant la Terre sphérique immobile au centre de l’Univers, et développe une approche fondée sur l’observation et la classification. 

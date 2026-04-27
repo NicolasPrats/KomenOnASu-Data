@@ -2,8 +2,11 @@
 name: "Ératosthène de Cyrène"
 born: -276
 died: -195
-tagline: "Directeur de la Bibliothèque d'Alexandrie ; premier à mesurer la circonférence de la Terre."
-humanReviewed: false
+tagline: "Directeur de la Bibliothèque d'Alexandrie ; premier à évaluer la circonférence de la Terre."
+humanReviewed: true
 ---
 
-Ératosthène (~276–195 av. J.-C.) est l'un des savants les plus remarquables de l'Antiquité. Directeur de la Grande Bibliothèque d'Alexandrie, il excelle en géographie, astronomie et mathématiques. Son expérience du puits de Syène est un chef-d'œuvre de raisonnement géométrique appliqué.
+
+Ératosthène (vers 276–194 av. J.-C.) est un mathématicien, astronome et géographe grec.
+
+Avec son expérience du puits de Syène , il a calculé avec une bonne précision la circonférence de la Terre en utilisant l’angle des ombres entre deux villes, et a également posé les bases de la géographie mathématique, notamment avec un système de coordonnées pour localiser les lieux.
